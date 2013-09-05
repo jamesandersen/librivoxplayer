@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	<mx:Script>
+		<![CDATA[
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import org.jandersen.lvp.controller.LVController;
+			
+			
+		]]>
+	</mx:Script>
+	<mx:Label text="{data.title}" styleName="itemTitle" width="100%" color="#FCFFF5"/>
+</mx:Canvas>

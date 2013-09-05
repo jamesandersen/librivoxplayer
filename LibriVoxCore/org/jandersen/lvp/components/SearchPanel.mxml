@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml"
+	width="100%" height="100%">
+	<mx:Script>
+		<![CDATA[
+			import org.jandersen.lvp.model.*;
+			import com.adobe.cairngorm.control.*;
+			import org.jandersen.lvp.controller.LVController;
+			import mx.events.ListEvent;
+			import org.jandersen.lvp.events.RequestFeedEvent;
+			
+			protected const SIMPLE_SEARCH:String = "";
+			protected const ADV_SEARCH:String = "advSearch";
+			protected const RESULTS:String = "searchResults";
+			
+			[Bindable]
+			protected var model:LibriVoxModel = LibriVoxModel.instance;
+			
+			private function btnSearch_click(e:MouseEvent):void{
+				var evt:CairngormEvent = new CairngormEvent(LVController.EVENT_SEARCH_LIBRIVOX);
+				var params:Object = new Object();
+				params['title'] = txtTitle.text;
+				params['author'] = txtAuthor.text;
+				params['status'] = cmbStatus.selectedItem.data;
+				if(currentState == ADV_SEARCH){
+					params['cat'] = txtCategory.text;
+					params['genre'] = txtGenre.text;
+					params['type'] = cmbSoloGroup.selectedItem.data;
+					params['date'] = '';
+					params['language'] = '';
+					params['reader'] = '';
+					params['bc'] = '';
+					params['mc'] = '';
+					params['action'] = 'Search';
+				}
+				evt.data = params;
+				evt.dispatch();
+			}
+			
+			protected function handleDoubleClick(e:ListEvent):void{
+				var feedEvent:RequestFeedEvent = new RequestFeedEvent();
+				feedEvent.data = e.itemRenderer.data;
+				feedEvent.dispatch();
+			}
+			
+			protected function txtOptions_click(e:MouseEvent):void {
+				if(this.currentState == ADV_SEARCH){
+					LibriVoxModel.searchState = SearchPanelState.SIMPLE_SEARCH;
+					txtOptions.text = "more options >>";
+				}else{
+					LibriVoxModel.searchState = SearchPanelState.ADV_SEARCH;
+					txtOptions.text = "<< less options";
+				}
+			}
+		]]>
+	</mx:Script>
+	
+	<mx:states>
+		<mx:State name="advSearch">
+			<mx:AddChild relativeTo="{itemStatus}" position="before">
+				<mx:target>
+					<mx:FormItem label="Category">
+						<mx:TextInput id="txtCategory"/>
+					</mx:FormItem>
+				</mx:target>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{itemStatus}" position="before">
+				<mx:target>
+					<mx:FormItem label="Genre">
+						<mx:TextInput id="txtGenre"/>
+					</mx:FormItem>
+				</mx:target>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{itemStatus}" position="after">
+				<mx:target>
+					<mx:FormItem label="Solo/Group">
+						<mx:ComboBox width="200" id="cmbSoloGroup">
+							<mx:ArrayCollection>
+						         <mx:Object label="Either" data=""/>
+						         <mx:Object label="Group" data="Group"/>
+						         <mx:Object label="Solo" data="Solo"/>
+						      </mx:ArrayCollection>
+						</mx:ComboBox>
+					</mx:FormItem>
+				</mx:target>
+			</mx:AddChild>
+		</mx:State>
+		<mx:State name="searchResults">
+			<mx:RemoveChild target="{frmSearch}"/>
+			<mx:AddChild relativeTo="{this}">
+				<mx:target>
+					<mx:DataGrid id="dgSearchResults" dataProvider="{model.searchResults}"
+						left="3" right="3" top="25" bottom="3"
+						itemDoubleClick="handleDoubleClick(event)" doubleClickEnabled="true">
+						<mx:columns>
+							<mx:DataGridColumn headerText="Title" dataField="title"/>
+							<mx:DataGridColumn headerText="Author" dataField="author"/>
+						</mx:columns>
+					</mx:DataGrid>
+				</mx:target>
+			</mx:AddChild>
+			<mx:AddChild relativeTo="{this}">
+				<mx:target>
+					<mx:Button id="btnSearchAgain" label="Search Again" left="3" top="3"
+						click="LibriVoxModel.searchState = SearchPanelState.SIMPLE_SEARCH;"/>
+				</mx:target>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	<mx:transitions>
+		<mx:Transition fromState="{SIMPLE_SEARCH}" toState="{ADV_SEARCH}">
+			<mx:Resize target="{frmSearch}" />
+		</mx:Transition>
+		<mx:Transition fromState="{ADV_SEARCH}" toState="{SIMPLE_SEARCH}">
+			<mx:Resize target="{frmSearch}" />
+		</mx:Transition>
+	</mx:transitions>
+	<mx:Form id="frmSearch" x="10" y="10" label="Search LibriVox Audiobooks" borderStyle="solid" borderThickness="1" width="347">
+		<mx:FormItem label="Title">
+			<mx:TextInput id="txtTitle" width="200" />
+		</mx:FormItem>
+		<mx:FormItem id="itemAuthor" label="Author">
+			<mx:TextInput id="txtAuthor" width="200"/>
+		</mx:FormItem>
+		<mx:FormItem id="itemStatus" label="Status">
+			<mx:ComboBox width="200" id="cmbStatus">
+				<mx:ArrayCollection>
+			         <mx:Object label="Any" data="all"/>
+			         <mx:Object label="Complete" data="complete"/>
+			         <mx:Object label="In Progress" data="active"/>
+			         <mx:Object label="Open" data="open"/>
+			         <mx:Object label="Fully Subscribed" data="subscribed"/>
+			         <mx:Object label="Proof Listening" data="proof"/>
+			      </mx:ArrayCollection>
+			</mx:ComboBox>
+		</mx:FormItem>
+		<mx:FormItem>
+			<mx:HBox>
+				<mx:Button label="Search" id="btnSearch" click="btnSearch_click(event)"/>
+				<mx:Text id="txtOptions" text="more options >>" click="txtOptions_click(event)"
+					buttonMode="true" useHandCursor="true" selectable="false"
+					mouseEnabled="true"/>
+			</mx:HBox>
+		</mx:FormItem>
+	</mx:Form>
+</mx:Canvas>

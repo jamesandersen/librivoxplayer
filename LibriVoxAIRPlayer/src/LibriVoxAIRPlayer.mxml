@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:WindowedApplication xmlns:mx="http://www.adobe.com/2006/mxml" layout="vertical"
+	xmlns:cmp="org.jandersen.lvp.components.*"
+	xmlns:control="org.jandersen.lvp.controller.*"
+	creationComplete="init()">
+	<mx:Style source="lvp.css"/>
+	<mx:Script>
+		<![CDATA[
+			import org.jandersen.lvp.model.*;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import org.jandersen.lvp.controller.LVController;
+			
+			private static const forceCompilation:AIREnvironment = null;
+			
+			[Bindable]
+			public var model:LibriVoxModel = LibriVoxModel.instance;
+			
+			private function init():void{
+				model.audioControl = audio;
+				//model.environment = new AIREnvironment();
+				var event:CairngormEvent = new CairngormEvent(LVController.EVENT_NEW_RELEASES);
+				event.dispatch();
+			}
+		]]>
+	</mx:Script>
+	<control:LVController/>
+	<mx:Label id="lblTitle" htmlText="Libri&lt;b>Vox&lt;/b> Player" fontSize="24" fontAntiAliasType="advanced" fontFamily="Lucida Sans, Serif" color="#FFFFFF"/>
+	<mx:HBox>
+		<cmp:AudioControl id="audio" playlist="{model.currentChapters}" 
+			imgSource="{model.currentImageURL}"/>
+	</mx:HBox>
+	<cmp:LibriVoxTabs id="tabs"/>
+</mx:WindowedApplication>

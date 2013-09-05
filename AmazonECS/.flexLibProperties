@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flexLibProperties version="1">
+<includeClasses>
+<classEntry path="org.jandersen.ecs.operations.AWSRestRequestBase"/>
+<classEntry path="org.jandersen.ecs.operations.BookSearchRequest"/>
+<classEntry path="org.jandersen.ecs.operations.ItemSearchRequest"/>
+<classEntry path="org.jandersen.ecs.util.AWSConstants"/>
+<classEntry path="org.jandersen.ecs.util.ResponseGroup"/>
+<classEntry path="org.jandersen.ecs.util.SearchIndex"/>
+</includeClasses>
+<includeResources/>
+<namespaceManifests/>
+</flexLibProperties>

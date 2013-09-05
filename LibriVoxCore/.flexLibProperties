@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<flexLibProperties version="1">
+<includeClasses>
+<classEntry path="com.fusiox.media.ID3Stream"/>
+<classEntry path="com.fusiox.ui.Image"/>
+<classEntry path="org.jandersen.lvp.commands.NewReleasesCommand"/>
+<classEntry path="com.fusiox.ui.Visualization"/>
+<classEntry path="org.jandersen.lvp.commands.PlayChapterCommand"/>
+<classEntry path="com.fusiox.ui.Reflection"/>
+<classEntry path="org.jandersen.lvp.components.BookFeedService"/>
+<classEntry path="org.jandersen.lvp.commands.BookFeedCommand"/>
+<classEntry path="org.jandersen.lvp.model.KulerColorScheme"/>
+<classEntry path="org.jandersen.lvp.components.LibriVoxTabs"/>
+<classEntry path="org.jandersen.lvp.events.RequestFeedEvent"/>
+<classEntry path="org.jandersen.lvp.commands.AbstractLVCommand"/>
+<classEntry path="org.jandersen.lvp.components.SearchPanel"/>
+<classEntry path="org.jandersen.lvp.renderers.LibriVoxItemRenderer2"/>
+<classEntry path="org.jandersen.lvp.components.TimeLabel"/>
+<classEntry path="com.fusiox.media.ID3Reader"/>
+<classEntry path="org.jandersen.lvp.model.IEnvironment"/>
+<classEntry path="org.jandersen.lvp.model.LibriVoxItem"/>
+<classEntry path="org.jandersen.lvp.renderers.ChapterRenderer"/>
+<classEntry path="org.jandersen.lvp.renderers.LibriVoxItemRenderer"/>
+<classEntry path="org.jandersen.lvp.model.LibriVoxModel"/>
+<classEntry path="org.jandersen.lvp.model.EnvironmentFactory"/>
+<classEntry path="org.jandersen.lvp.components.AudioControl"/>
+<classEntry path="org.jandersen.lvp.commands.DownloadZipCommand"/>
+<classEntry path="border.SimpleGradientBorder"/>
+<classEntry path="org.jandersen.lvp.controller.LVController"/>
+<classEntry path="org.jandersen.lvp.model.SearchPanelState"/>
+<classEntry path="org.jandersen.lvp.commands.SearchLibrivoxCommand"/>
+<classEntry path="org.jandersen.lvp.commands.SearchAmazonCommand"/>
+<classEntry path="org.jandersen.lvp.components.AudioControlBase"/>
+<classEntry path="org.jandersen.lvp.commands.RetrieveItemDetails"/>
+</includeClasses>
+<includeResources/>
+<namespaceManifests/>
+</flexLibProperties>

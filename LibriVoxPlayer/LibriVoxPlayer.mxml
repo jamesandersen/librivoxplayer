@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:control="org.jandersen.lvp.controller.*"
+	xmlns:cmp="org.jandersen.lvp.components.*"
+	xmlns:fx="com.fusiox.ui.*"
+	layout="vertical"
+	creationComplete="init()">
+	<control:LVController/>
+	<mx:Style source="lvp.css"/>
+	<mx:Script>
+		<![CDATA[
+			import mx.events.ListEvent;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.http.HTTPService;
+			import org.jandersen.lvp.renderers.LibriVoxItemRenderer;
+			import org.jandersen.lvp.model.LibriVoxModel;
+			import org.jandersen.lvp.controller.LVController;
+			import org.jandersen.lvp.events.*;
+			
+			[Bindable]
+			public var model:LibriVoxModel = LibriVoxModel.getInstance();
+			public var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+			
+			private function init():void{
+				model.audioControl = audio;
+				dispatcher.dispatchEvent(new CairngormEvent(LVController.EVENT_NEW_RELEASES));
+				
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Label id="lblTitle" htmlText="Libri&lt;b>Vox&lt;/b> Player" fontSize="24" fontAntiAliasType="advanced" fontFamily="Lucida Sans, Serif" color="#FFFFFF"/>
+	<mx:HBox>
+		<cmp:AudioControl id="audio" playlist="{model.currentChapters}" imgSource="{model.currentImageURL}"/>
+	</mx:HBox>
+	
+	<mx:TabNavigator width="600"  height="360" paddingLeft="0" paddingRight="0" horizontalGap="0">
+		<mx:Canvas label="New Releases" width="100%" height="100%" verticalScrollPolicy="off">
+			<mx:ProgressBar id="barLoading" indeterminate="true" horizontalCenter="0" verticalCenter="0"
+				 visible="{model.newItems.length > 0 ? false : true}"/>
+			<mx:List id="lstNewReleases" variableRowHeight="true" width="100%" height="320" paddingLeft="0" paddingRight="0"
+			itemRenderer="org.jandersen.lvp.renderers.LibriVoxItemRenderer2" visible="{model.newItems.length > 0 ? true : false}"
+			dataProvider="{model.newItems}" verticalCenter="0.5" horizontalCenter="0"/>
+		</mx:Canvas>
+		<cmp:SearchPanel label="Search" width="100%" height="100%"
+			currentState="{LibriVoxModel.searchState.name}"/>
+	</mx:TabNavigator>
+	
+</mx:Application>

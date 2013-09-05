@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox xmlns:mx="http://www.adobe.com/2006/mxml" width="100%"
+	useHandCursor="true" buttonMode="true"
+	verticalScrollPolicy="off" horizontalScrollPolicy="off">
+	<mx:states>
+		<mx:State name="full">
+			<mx:AddChild creationPolicy="">
+				<mx:Text id="txtDescription" width="100%" htmlText="{data.description}"/>
+			</mx:AddChild>
+		</mx:State>
+	</mx:states>
+	<mx:transitions>
+        <mx:Transition fromState="*" toState="*">
+            <mx:Resize target="{this}" />
+        </mx:Transition>
+    </mx:transitions>
+	<mx:Script>
+		<![CDATA[
+			import org.jandersen.lvp.model.LibriVoxModel;
+			import com.adobe.cairngorm.control.CairngormEvent;
+		
+			import org.jandersen.lvp.model.LibriVoxItem;
+			import org.jandersen.lvp.controller.LVController;
+			import mx.controls.List;
+			import org.jandersen.lvp.events.RequestFeedEvent;
+			import mx.controls.Alert;
+			import mx.events.FlexEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+		
+			public static const STATE_FULL:String = "full";
+			protected var _tmpState:String;
+			protected var _tmpStateDirty:Boolean;
+			protected function get tmpState():String { return _tmpState; }
+			protected function set tmpState(s:String):void { _tmpState = s; _tmpStateDirty = true;}
+			[Bindable]
+			protected var model:LibriVoxModel = LibriVoxModel.instance;
+			[Bindable]
+			protected var _detailLoaded:Boolean;
+			
+			
+			protected override function createChildren():void{
+				super.createChildren();
+				addEventListener(MouseEvent.CLICK, handleMouseClick);
+			}
+			
+			/*protected override function measure():void{
+				if(!isNaN(this.explicitWidth)){
+					this.measuredWidth = this.explicitWidth;
+					txtTitle.explicitWidth = (1 - (btnPlay.percentWidth/100)) * this.explicitWidth;
+					if(txtDescription) txtDescription.explicitWidth = this.explicitWidth;
+				}
+				this.measuredHeight = txtTitle.height 
+					+ getStyle("paddingTop") + getStyle("paddingBottom") + 15;
+				if(txtDescription != null && txtDescription.parent != null){
+					measuredHeight += txtDescription.height;
+				} 
+				
+			}*/
+			
+			protected override function updateDisplayList(unscaledWidth:Number, unscaledHeight:Number):void{
+				if(_tmpStateDirty){
+					currentState = tmpState;
+					_tmpStateDirty = false;
+				}
+				super.updateDisplayList(unscaledWidth, unscaledHeight);
+			}
+			
+			public override function set data(value:Object):void{
+				super.data = value;
+				if(data is LibriVoxItem){
+					var lvi:LibriVoxItem = data as LibriVoxItem;
+					tmpState = lvi.selected ? STATE_FULL : "";
+					_detailLoaded = lvi.isFullyLoaded();
+					invalidateDisplayList();
+				}
+			}
+			
+			protected function handleMouseClick(e:MouseEvent):void{
+				if(currentState != STATE_FULL){
+					tmpState = STATE_FULL;
+					if(data is LibriVoxItem){
+						var event:CairngormEvent = new CairngormEvent(LVController.EVENT_RETRIEVE_DETAILS);
+						event.data = data;
+						event.dispatch();
+						(data as LibriVoxItem).selected = true;
+					}
+				}else{
+					if(data is LibriVoxItem){
+						(data as LibriVoxItem).selected = false;
+					}
+					tmpState = "";
+				}
+				invalidateDisplayList();
+			}
+			
+			protected function btnPlay_click(e:MouseEvent):void{
+				var feedEvent:RequestFeedEvent = new RequestFeedEvent();
+				feedEvent.data = data;
+				feedEvent.dispatch();
+				e.stopPropagation();
+			}
+			
+			protected function btnDownload_click(e:MouseEvent):void{
+				var event:CairngormEvent = new CairngormEvent(LVController.EVENT_DOWNLOAD_ZIP);
+				event.data = data;
+				event.dispatch();
+				e.stopPropagation();
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:HBox paddingLeft="0" paddingRight="0" paddingBottom="0" paddingTop="0" horizontalGap="0" width="100%">
+		<mx:Text id="txtTitle" width="85%" styleName="itemTitle" text="{data.title}"
+			selectable="false"/>
+		<mx:Button id="btnPlay" label="Play" fontSize="8" right="3" 
+			click="btnPlay_click(event)"/>
+		<mx:Button id="btnDownload" label="Download" fontSize="8" right="30"
+			visible="{model.environment.filesystemEnabled &amp;&amp; _detailLoaded}"
+			click="btnDownload_click(event)"/>
+	</mx:HBox>
+	
+	
+</mx:VBox>

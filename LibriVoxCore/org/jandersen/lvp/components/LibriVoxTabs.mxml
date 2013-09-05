@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:TabNavigator xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:cmp="org.jandersen.lvp.components.*"
+	width="600" height="400">
+	<mx:Script>
+		<![CDATA[
+			import org.jandersen.lvp.model.*;
+		]]>
+	</mx:Script>
+	
+	<mx:Canvas label="New Releases" width="100%" height="100%" verticalScrollPolicy="off">
+		<mx:ProgressBar id="barLoading" indeterminate="true" horizontalCenter="0" verticalCenter="0"
+			 visible="{LibriVoxModel.instance.newItems.length > 0 ? false : true}"/>
+		<mx:List id="lstNewReleases" variableRowHeight="true" width="100%" height="320" paddingLeft="0" paddingRight="0"
+		itemRenderer="org.jandersen.lvp.renderers.LibriVoxItemRenderer2" visible="{LibriVoxModel.instance.newItems.length > 0 ? true : false}"
+		dataProvider="{LibriVoxModel.instance.newItems}" verticalCenter="0.5" horizontalCenter="0"/>
+	</mx:Canvas>
+	<cmp:SearchPanel label="Search" width="100%" height="100%"
+		currentState="{LibriVoxModel.searchState.name}"/>
+</mx:TabNavigator>

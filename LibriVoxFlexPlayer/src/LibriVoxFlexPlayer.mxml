@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+	xmlns:control="org.jandersen.lvp.controller.*"
+	xmlns:cmp="org.jandersen.lvp.components.*"
+	xmlns:fx="com.fusiox.ui.*"
+	layout="vertical"
+	creationComplete="init()">
+	<control:LVController/>
+	<mx:Style source="lvp.css"/>
+	<mx:Script>
+		<![CDATA[
+			import org.jandersen.lvp.model.FlexEnvironment;
+			import mx.events.ListEvent;
+			import com.adobe.cairngorm.control.CairngormEvent;
+			import com.adobe.cairngorm.control.CairngormEventDispatcher;
+			import mx.controls.Alert;
+			import mx.rpc.events.FaultEvent;
+			import mx.rpc.events.ResultEvent;
+			import mx.rpc.http.HTTPService;
+			import org.jandersen.lvp.renderers.LibriVoxItemRenderer;
+			import org.jandersen.lvp.model.LibriVoxModel;
+			import org.jandersen.lvp.controller.LVController;
+			import org.jandersen.lvp.events.*;
+			
+			private static const forceCompilation:FlexEnvironment = null;
+			
+			[Bindable]
+			public var model:LibriVoxModel = LibriVoxModel.instance;
+			public var dispatcher:CairngormEventDispatcher = CairngormEventDispatcher.getInstance();
+			
+			private function init():void{
+				model.audioControl = audio;
+				//model.environment = new FlexEnvironment();
+				dispatcher.dispatchEvent(new CairngormEvent(LVController.EVENT_NEW_RELEASES));
+				
+			}
+			
+		]]>
+	</mx:Script>
+	<mx:Label id="lblTitle" htmlText="Libri&lt;b>Vox&lt;/b> Player" fontSize="24" fontAntiAliasType="advanced" fontFamily="Lucida Sans, Serif" color="#FFFFFF"/>
+	<mx:HBox>
+		<cmp:AudioControl id="audio" playlist="{model.currentChapters}" imgSource="{model.currentImageURL}"/>
+	</mx:HBox>
+	<cmp:LibriVoxTabs id="tabs"/>
+</mx:Application>
